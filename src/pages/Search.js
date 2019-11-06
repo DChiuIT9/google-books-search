@@ -1,29 +1,34 @@
 import React, { Component } from "react";
-import DeleteBtn from "../components/DeleteBtn";
+import SaveBtn from "../components/SaveBtn";
 import Jumbotron from "../components/Jumbotron";
 import API from "../utils/API";
 import { Link } from "react-router-dom";
 import { Col, Row, Container } from "../components/Grid";
 import { List, ListItem } from "../components/List";
-import { Input, TextArea, FormBtn } from "../components/Form";
+import { Input, FormBtn } from "../components/Form";
 
-class Books extends Component {
+class Search extends Component {
   state = {
     books: [],
     title: "",
     author: "",
-    synopsis: ""
+    description: ""
   };
 
   componentDidMount() {
     this.loadBooks("Mockingbird");
   }
 
-  loadBooks = () => {
-    API.getBooks()
-      .then(res =>
-        this.setState({ books: res.data, title: "", author: "", synopsis: "" })
-      )
+  loadBooks = (book) => {
+    API.getBooks(book)
+      .then(res => {
+        console.log("React Res Data" + JSON.stringify(res.data.items));
+        this.setState({
+          books: res.data.items, title: "", author: "", description: ""
+
+        })
+        // this.setState({ books: res.data, title: "", author: "", synopsis: "" })
+      })
       .catch(err => console.log(err));
   };
 
@@ -70,7 +75,7 @@ class Books extends Component {
                   value={this.state.title}
                   onChange={this.handleInputChange}
                   name="title"
-                  placeholder="Title (required)"
+                  placeholder="Book (required)"
                 />
                 {/* <TextArea
                   value={this.state.synopsis}
@@ -103,7 +108,7 @@ class Books extends Component {
                         {book.title} by {book.author}
                       </strong>
                     </Link>
-                    <DeleteBtn onClick={() => this.deleteBook(book._id)} />
+                    <SaveBtn className="btn btn-info" style={{ float: "right", marginBottom: 10 }} onClick={() => this.deleteBook(book._id)} />
                   </ListItem>
                 ))}
               </List>
@@ -118,4 +123,4 @@ class Books extends Component {
   }
 }
 
-export default Books;
+export default Search;
