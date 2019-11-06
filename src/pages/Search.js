@@ -19,8 +19,8 @@ class Search extends Component {
     this.loadBooks("Mockingbird");
   }
 
-  loadBooks = (book) => {
-    API.getBooks(book)
+  loadBooks = (books) => {
+    API.getBooks(books)
       .then(res => {
         console.log("React Res Data" + JSON.stringify(res.data.items));
         this.setState({
@@ -108,7 +108,7 @@ class Search extends Component {
                         {book.title} by {book.author}
                       </strong>
                     </Link>
-                    <SaveBtn className="btn btn-info" style={{ float: "right", marginBottom: 10 }} onClick={() => this.deleteBook(book._id)} />
+                    <SaveBtn className="btn btn-info" style={{ float: "right", marginBottom: 10 }} onClick={() => this.saveBook(book._id)} />
                   </ListItem>
                 ))}
               </List>
