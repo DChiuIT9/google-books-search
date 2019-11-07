@@ -12,19 +12,21 @@ class Search extends Component {
     books: [],
     title: "",
     author: "",
-    description: ""
+    description: "",
+    image: "",
+    link: ""
   };
 
   componentDidMount() {
-    this.loadBooks("Mockingbird");
+    // this.loadBooks();
   }
 
   loadBooks = (books) => {
     API.getBooks(books)
       .then(res => {
-        console.log("React Res Data" + JSON.stringify(res.data.items));
+        console.log("React Res Data: " + JSON.stringify(res.data.items));
         this.setState({
-          books: res.data.items, title: "", author: "", description: ""
+          books: res.data.items, title: "", author: "", description: "", image: "", link: ""
 
         })
         // this.setState({ books: res.data, title: "", author: "", synopsis: "" })
@@ -47,14 +49,16 @@ class Search extends Component {
 
   handleFormSubmit = event => {
     event.preventDefault();
-    if (this.state.title && this.state.author) {
-      API.saveBook({
-        title: this.state.title,
-        author: this.state.author,
-        synopsis: this.state.synopsis
-      })
-        .then(res => this.loadBooks())
-        .catch(err => console.log(err));
+    console.log(this.state.title);
+    if (this.state.title) {
+      this.loadBooks(this.state.title)
+      // API.getBooks(this.state.title).then(res => {
+      //   console.log(res);
+      //   this.setState ({books: res.data});
+      // })
+      //  )
+      //   .then(res => this.loadBooks())
+      //   .catch(err => console.log(err));
     }
   };
 
@@ -103,11 +107,18 @@ class Search extends Component {
               <List>
                 {this.state.books.map(book => (
                   <ListItem key={book._id}>
-                    <Link to={"/books/" + book._id}>
+                    <Link target= "_blank" to={"/books/" + book._id}>
                       <strong>
-                        {book.title} by {book.author}
+                        {book.volumeInfo.title}
                       </strong>
                     </Link>
+                    <p>Written by {book.volumeInfo.authors.join(", ")}</p>
+                    
+                    <img style={{float: "left"}} src={book.volumeInfo.imageLinks.smallThumbnail} alt="" />
+                    
+                    {/* <div style={{float: "left"}}> */}
+                      <p style={{float: "left"}}>{book.volumeInfo.description}</p>
+                    {/* </div> */}
                     <SaveBtn className="btn btn-info" style={{ float: "right", marginBottom: 10 }} onClick={() => this.saveBook(book._id)} />
                   </ListItem>
                 ))}
